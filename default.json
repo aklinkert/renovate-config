@@ -104,7 +104,7 @@
         "/\\.sh$/"
       ],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>[a-z-.]+?) depName=(?<depName>[^\\s]+?)(?: packageName=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?\\s+(?:ENV |ARG |export )?[A-Za-z0-9_]+?_VERSION\\s*[:=]\\s*[\"']?(?<currentValue>[0-9][^\\s\"';&|)}]*)[\"']?"
+        "# renovate: datasource=(?<datasource>[a-z-.]+?) depName=(?<depName>[^\\s]+?)(?: packageName=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?\\s+(?:ENV |ARG |export )?[A-Za-z0-9_]+?_VERSION\\s*[:=]\\s*[\"']?(?<currentValue>v?[0-9][^\\s\"';&|)}]*)[\"']?"
       ]
     }
   ],
