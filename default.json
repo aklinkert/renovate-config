@@ -1,0 +1,117 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Shared Renovate preset for aklinkert repositories",
+  "extends": [
+    "config:best-practices",
+    ":semanticCommits",
+    ":timezone(Europe/Berlin)",
+    ":label(dependencies)"
+  ],
+  "schedule": [
+    "before 6am on monday"
+  ],
+  "prHourlyLimit": 4,
+  "prConcurrentLimit": 10,
+  "minimumReleaseAge": "3 days",
+  "postUpdateOptions": [
+    "gomodTidy",
+    "gomodUpdateImportPaths"
+  ],
+  "packageRules": [
+    {
+      "description": "Automerge non-major updates once all status checks pass",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest",
+        "pinDigest",
+        "lockFileMaintenance"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "Pins and digests often lack a release timestamp, so a release age would block them forever",
+      "matchUpdateTypes": [
+        "pin",
+        "digest",
+        "pinDigest",
+        "lockFileMaintenance"
+      ],
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "One PR for all non-major GitHub Actions updates",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest",
+        "pinDigest"
+      ],
+      "groupName": "github-actions",
+      "groupSlug": "github-actions-non-major"
+    },
+    {
+      "description": "One PR for all non-major Go module updates",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "groupName": "go modules",
+      "groupSlug": "gomod-non-major"
+    },
+    {
+      "description": "Raising the go directive changes the minimum Go version for consumers, so a human reviews it",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDepTypes": [
+        "golang",
+        "toolchain"
+      ],
+      "automerge": false,
+      "groupName": "go directive",
+      "groupSlug": "go-directive"
+    },
+    {
+      "description": "Major updates need a human review",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "automerge": false,
+      "labels": [
+        "dependencies",
+        "major"
+      ]
+    }
+  ],
+  "customManagers": [
+    {
+      "description": "Versions annotated with '# renovate: datasource=... depName=...' on the line above a *_VERSION variable",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/[^/]+\\.ya?ml$/",
+        "/(^|/)Dockerfile[^/]*$/",
+        "/(^|/)Makefile$/",
+        "/\\.sh$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-z-.]+?) depName=(?<depName>[^\\s]+?)(?: packageName=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?\\s+(?:ENV |ARG |export )?[A-Za-z0-9_]+?_VERSION\\s*[:=]\\s*[\"']?(?<currentValue>[0-9][^\\s\"';&|)}]*)[\"']?"
+      ]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": [
+      "dependencies",
+      "security"
+    ]
+  }
+}
